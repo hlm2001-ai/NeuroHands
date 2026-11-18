@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#080d1d" />
+  <meta name="description" content="NeuroHands — an interactive neural network learning lab you can control with your hands. Explore, train and experiment with real neural networks." />
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>NeuroHands — Learn AI by Doing</title>
+  <script type="importmap">
+    {"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#home" aria-label="NeuroHands home">
+        <div class="brand-mark"><svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M9 10 18 5l9 5v15l-9 6-9-6V10Z" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="11" r="2.2" fill="currentColor"/><circle cx="12" cy="22" r="2.2" fill="currentColor"/><circle cx="24" cy="22" r="2.2" fill="currentColor"/><path d="m18 13-6 7m6-7 6 7m-10 2h8" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div><strong>neuro<span>hands</span></strong><small>THE AI LEARNING LAB</small></div>
+      </a>
+      <div class="nav-section-label" data-i18n="workspace">WORKSPACE</div>
+      <button class="side-link active" data-tab="learn" type="button"><span class="mini-icon">◈</span><span data-i18n="guidedLab">Guided Lab</span><span class="side-link-arrow">↗</span></button>
+      <button class="side-link" data-tab="free" type="button"><span class="mini-icon">⌘</span><span data-i18n="freeLab">Free Experiment</span></button>
+      <button class="side-link" data-tab="challenge" type="button"><span class="mini-icon">◇</span><span data-i18n="challenge">Knowledge Check</span></button>
+      <div class="nav-section-label nav-label-lessons" data-i18n="learningPath">LEARNING PATH</div>
+      <div class="lesson-nav" id="lesson-nav"></div>
+      <div class="sidebar-bottom">
+        <div class="guide-mini-card">
+          <div class="guide-mini-icon">✦</div>
+          <strong data-i18n="handsOn">Hands-on learning</strong>
+          <p data-i18n="handsOnDesc">Train a real model, not just an animation.</p>
+          <div class="guide-mini-line"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="sidebar-foot">NEUROHANDS <span>•</span> V1.0 <span>•</span> <span data-i18n="freeOpen">FREE & OPEN</span></div>
+      </div>
+    </aside>
+
+    <div class="main-wrap" id="home">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" type="button">☰</button>
+        <div class="breadcrumb"><span data-i18n="workspaceTitle">Workspace</span> <span class="slash">/</span> <span id="breadcrumb-current" data-i18n="guidedLab">Guided Lab</span></div>
+        <div class="top-actions">
+          <div class="local-badge"><span class="tiny-green"></span><span data-i18n="localProcessing">LOCAL PROCESSING</span></div>
+          <button class="language-switch" id="language-switch" type="button" aria-label="Switch language">العربية</button>
+          <button class="camera-top-btn" id="camera-top-btn" type="button"><span class="camera-dot"></span><span id="camera-top-text" data-i18n="enableCamera">Enable Camera</span></button>
+        </div>
+      </header>
+      <main class="content">
+        <div class="eyebrow"><span class="eyebrow-line"></span><span data-i18n="eyebrow">THE FUTURE OF INTERACTIVE LEARNING</span><span class="eyebrow-star">✳</span></div>
+        <div class="hero-row">
+          <div class="hero-copy">
+            <h1 data-i18n-html="headline">Don't just learn AI.<br/><em>Experience it.</em></h1>
+            <p data-i18n="heroDesc">Build, train and understand a real neural network — with your mouse or the movement of your hands.</p>
+          </div>
+          <div class="hero-metrics"><span class="metric-spark">✧</span><strong>100%</strong><small data-i18n="noApi">NO PAID API</small></div>
+        </div>
+        <div class="workspace-grid">
+          <section class="visual-panel" aria-label="Interactive neural network visualization">
+            <div class="panel-top">
+              <div class="panel-title"><span class="panel-icon">✺</span><div><strong data-i18n="neuralCanvas">Neural Canvas</strong><small data-i18n="neuralCanvasSub">LIVE INTERACTIVE MODEL</small></div></div>
+              <div class="canvas-status"><span class="pulse-dot"></span><span id="model-state" data-i18n="modelReady">MODEL READY</span></div>
+            </div>
+            <div id="network-stage" class="network-stage">
+              <div class="stage-halo halo-a"></div><div class="stage-halo halo-b"></div>
+              <canvas id="fallback-canvas" aria-hidden="true"></canvas>
+              <div id="three-host"></div>
+              <div class="stage-coordinates" aria-hidden="true">X 0001 / Y 0010<br/>MODEL / 2—4—1</div>
+              <div class="scene-annotation annotation-left">INPUT <span>2 NEURONS</span></div>
+              <div class="scene-annotation annotation-mid">HIDDEN <span id="hidden-annotation">4 NEURONS</span></div>
+              <div class="scene-annotation annotation-right">OUTPUT <span>1 NEURON</span></div>
+              <div class="stage-bottom-bar"><span><span class="tiny-purple">●</span> <span data-i18n="clickNeuron">CLICK A NEURON TO INSPECT</span></span><span data-i18n="dragRotate">DRAG TO ROTATE ↗</span></div>
+              <div class="hand-cursor" id="hand-cursor" aria-hidden="true"><span></span></div>
+            </div>
+            <div class="canvas-footer">
+              <div class="legend"><span><i class="legend-dot blue"></i> <span data-i18n="input">Input</span></span><span><i class="legend-dot lilac"></i> <span data-i18n="hidden">Hidden</span></span><span><i class="legend-dot mint"></i> <span data-i18n="output">Output</span></span></div>
+              <div class="scene-controls"><button class="icon-btn" id="reset-view" title="Reset scene view" aria-label="Reset view" type="button">⟲</button><button class="icon-btn" id="toggle-motion" title="Toggle visual motion" aria-label="Toggle motion" type="button">Ⅱ</button></div>
+            </div>
+          </section>
+
+          <aside class="learning-panel" id="learning-panel">
+            <div class="lesson-heading"><div class="tag"><span>✳</span><span data-i18n="guidedExperience">GUIDED EXPERIENCE</span></div><span class="lesson-counter" id="lesson-counter">01 / 05</span></div>
+            <div class="learn-progress-track"><span id="learn-progress"></span></div>
+            <div class="lesson-art"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-center">✧</div><span class="orbit-particle p1"></span><span class="orbit-particle p2"></span><span class="orbit-particle p3"></span></div>
+            <span class="lesson-kicker" id="lesson-kicker">LESSON 01 — DISCOVER</span>
+            <h2 id="lesson-title">Meet the neurons.</h2>
+            <p class="lesson-body" id="lesson-body">Every neural network starts with inputs. Select a blue neuron to see how information enters the network.</p>
+            <div class="mission-box"><div class="mission-header"><span>◎ <span data-i18n="yourMission">YOUR MISSION</span></span><span id="mission-state" data-i18n="notYet">TO DO</span></div><p id="mission-text">Select any input neuron in the 3D canvas.</p></div>
+            <div class="inspector-card" id="inspector-card"><div class="inspector-heading"><span data-i18n="inspector">NEURON INSPECTOR</span><span id="inspector-x">✳</span></div><strong id="inspector-name">Nothing selected</strong><p id="inspector-description">Click a glowing node to learn its role.</p></div>
+            <div class="lesson-actions"><button class="text-btn" id="prev-lesson" type="button">← <span data-i18n="previous">Previous</span></button><button class="primary-btn" id="next-lesson" type="button"><span data-i18n="nextLesson">Next Lesson</span><span>→</span></button></div>
+          </aside>
+        </div>
+
+        <div class="bottom-grid">
+          <section class="data-card train-card">
+            <div class="data-card-head"><div><span class="card-kicker" data-i18n="trainingMonitor">TRAINING MONITOR</span><h3 data-i18n="learningCurve">Learning curve</h3></div><span class="chart-live"><span class="tiny-green"></span><span data-i18n="liveMetrics">LIVE METRICS</span></span></div>
+            <div class="training-stats"><div><small data-i18n="loss">LOSS</small><strong id="loss-value">0.000</strong></div><div><small data-i18n="accuracy">ACCURACY</small><strong id="accuracy-value">0%</strong></div><div><small data-i18n="epochs">EPOCHS</small><strong id="epochs-value">0</strong></div></div>
+            <div class="chart-wrapper"><canvas id="loss-chart" aria-label="Loss over training epochs" role="img"></canvas></div>
+            <div class="train-actions"><button class="primary-btn" id="train-btn" type="button"><span id="train-icon">▶</span><span id="train-btn-text" data-i18n="startTraining">Start Training</span></button><button class="outline-btn" id="reset-model" type="button">↻ <span data-i18n="reset">Reset</span></button><span class="train-tip" data-i18n="palmTrain">✋ Or hold an open palm to train</span></div>
+          </section>
+          <section class="data-card results-card">
+            <div class="data-card-head"><div><span class="card-kicker" data-i18n="predictionLab">PREDICTION LAB</span><h3 data-i18n="decisionMap">Decision map</h3></div><button class="info-pill" id="map-info-btn" type="button">ⓘ <span data-i18n="howItWorks">How it works</span></button></div>
+            <div class="map-row"><canvas id="decision-map" width="260" height="260" aria-label="Neural network predictions across the input space"></canvas><div class="map-description"><div class="mini-eyebrow" data-i18n="problemType">CURRENT PROBLEM</div><strong id="problem-name">XOR Classification</strong><p id="problem-description">Teach the network to predict whether two binary inputs are different.</p><div class="map-legend"><span><i class="square-violet"></i> <span data-i18n="classZero">Class 0</span></span><span><i class="square-coral"></i> <span data-i18n="classOne">Class 1</span></span></div></div></div>
+          </section>
+        </div>
+
+        <section class="free-lab-section" id="free-lab-section" hidden>
+          <div class="section-heading"><div><span class="card-kicker" data-i18n="tinkerZone">YOUR EXPERIMENT ZONE</span><h2 data-i18n="makeItYours">Make it yours.</h2><p data-i18n="freeDesc">Change the architecture, retrain, and see how the results respond.</p></div><span class="section-icon">⌘</span></div>
+          <div class="control-grid"><label class="control-box"><span data-i18n="hiddenNeurons">Hidden neurons</span><strong id="hidden-value">4</strong><input id="hidden-slider" type="range" min="2" max="8" value="4" step="1"/><small data-i18n="hiddenTip">More neurons = more model capacity</small></label><label class="control-box"><span data-i18n="learningRate">Learning rate</span><strong id="lr-value">0.15</strong><input id="lr-slider" type="range" min="0.05" max="0.35" value="0.15" step="0.05"/><small data-i18n="lrTip">Controls the size of weight updates</small></label><label class="control-box"><span data-i18n="learnProblem">Learning challenge</span><strong>DATASET</strong><select id="problem-select"><option value="xor">XOR — Different inputs</option><option value="or">OR — At least one true</option><option value="and">AND — Both true</option></select><small data-i18n="problemTip">Try different decision boundaries</small></label></div>
+          <div class="experiment-footer"><span id="experiment-note" data-i18n="experimentNote">Your changes create a fresh model. Compare the new learning curve!</span><button class="outline-btn" id="randomize-model" type="button">✳ <span data-i18n="newNetwork">New network</span></button></div>
+        </section>
+
+        <section class="challenge-section" id="challenge-section" hidden>
+          <div class="section-heading"><div><span class="card-kicker" data-i18n="checkUnderstanding">CHECK YOUR UNDERSTANDING</span><h2 data-i18n="proveIt">Can you teach it back?</h2><p data-i18n="challengeDesc">A quick check to make sure the concepts clicked.</p></div><span class="section-icon">◇</span></div>
+          <div class="quiz-card"><div class="quiz-meta"><span id="quiz-progress">QUESTION 1 OF 3</span><span id="quiz-score">0 / 3</span></div><h3 id="quiz-question"></h3><div class="quiz-options" id="quiz-options"></div><div class="quiz-feedback" id="quiz-feedback" role="status"></div><button class="primary-btn" id="quiz-next" type="button" disabled><span data-i18n="nextQuestion">Next Question</span> →</button></div>
+        </section>
+
+        <div class="camera-float" id="camera-float" hidden>
+          <div class="camera-float-head"><span><i class="tiny-green"></i> <span data-i18n="handTracking">HAND TRACKING</span></span><button id="close-camera" title="Turn off camera" aria-label="Turn off camera" type="button">×</button></div>
+          <div class="camera-viewport"><video id="camera-video" muted autoplay playsinline></video><canvas id="hand-overlay"></canvas><span id="gesture-label">LOOKING FOR HAND...</span></div>
+          <div class="camera-hint" data-i18n="cameraHint">Pinch to select · Open palm to train</div>
+        </div>
+        <footer class="footer"><span>✳ NEUROHANDS <span class="footer-divider">/</span> <span data-i18n="footerDesc">An experiment in learning differently.</span></span><span data-i18n="privateCamera">Your camera stays on your device. No uploads.</span></footer>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
