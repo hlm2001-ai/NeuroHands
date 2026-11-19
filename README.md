@@ -1,72 +1,63 @@
-# NeuroHands — Learn AI by Doing
+# NeuroHands V2 — Interactive AI Learning Lab
 
-**NeuroHands** is a free, client-side interactive learning lab that teaches neural networks through real training, interactive neuron inspection, a 3D model, a step-by-step course, and hand gestures through your webcam.
+**NeuroHands** is a bilingual, free, static web app combining a trainable neural network, a visual neural graph, and webcam-based hand gestures. V2 makes hand actions **causally affect the model**, addressing V1's limited camera interaction.
 
-## What's included
+## What changed in V2?
 
-- 5 guided lessons: input neurons, hidden connections, model training, architecture experiments, and a knowledge check.
-- A **real** 2 → N → 1 neural network implemented from scratch with a tanh hidden layer and a sigmoid output.
-- Real gradient-based learning: **backpropagation with Adam optimization** and cross-entropy loss.
-- XOR, OR and AND classification tasks, with a genuine prediction map, training-loss chart and accuracy updates.
-- 3D visual network (Three.js), with mouse-based neuron selection and orbit-style dragging. A 2D fallback is available if the 3D CDN is unreachable.
-- Optional camera-based gestures through Google's MediaPipe Hand Landmarker: pinch to select neurons, open palm for one second to begin training.
-- English and Arabic (RTL) interface switch, responsive design, accessible buttons and local progress saved in `localStorage`.
+- **Pinch a blue Input neuron** to flip the live input value from `0` to `1` and back. A genuine feedforward pass immediately updates the live predicted class and `P(class 1)`.
+- **Pinch a purple Hidden neuron** to mute/unmute it. This sets that neuron's hidden activation to zero for inference/evaluation, with real changes to predictions, loss and possibly accuracy. The node dims and its incoming/outgoing visual connections disappear in 3D.
+- **Hold an open palm ~1 second** to train the network; it uses actual backpropagation and Adam, not simulated numbers.
+- **Hold a fist ~1.5 seconds** to reset the network (gesture recognition may vary by device/lighting).
+- **Point with index finger** to move a visible cursor. Near-neuron snapping highlights the current target and displays a contextual action label, rather than requiring a pixel-perfect pinch.
+- Added a prominent **Live Prediction** bar showing inputs, neural prediction, predicted probability, expected answer, and whether the selected example is correct. Tappable `x1` and `x2` values work without a camera.
+- Added a **three-stage interactive mission coach**: flip an input → train the model → mute a hidden neuron. Guidance is Arabic/English, and existing lessons now lead with these actions.
+- Clearer model reset and V2 lesson-progress storage; V2 CSS/JS links include a version query to avoid browser cache after updating.
 
-## Free, easy publishing — GitHub Pages (no build required)
+## The real learning model
 
-1. Sign in to your GitHub account and click **New repository**.
-2. Repository name: `NeuroHands` (or another name). Choose **Public**, then **Create repository**.
-3. Click **Add file → Upload files**. Upload `index.html`, `styles.css`, `app.js`, `.nojekyll`, and the folder `assets` (containing `favicon.svg`). If uploading folders isn't supported in your browser, create `assets/favicon.svg` from the GitHub file editor.
-4. Click **Commit changes**.
-5. Go to **Settings → Pages** in the repository.
-6. Under **Build and deployment**, set **Source: Deploy from a branch** and choose **Branch: main / (root)**; click **Save**.
-7. The URL will normally be `https://YOUR-USERNAME.github.io/NeuroHands/` (using the **exact capitalization** of the repository). GitHub Pages will show the actual address under Settings → Pages.
-8. Open the published site through **HTTPS**, then choose **Enable Camera** and grant permission if you'd like to use gestures.
+- Two binary inputs, configurable hidden layer (2–8 units, tanh activation), one sigmoid output.
+- Trainable neural network entirely in JavaScript; **cross-entropy**, backpropagation, **Adam** optimizer.
+- XOR, AND, and OR datasets (four training examples each) with learning curves and a decision heatmap.
+- The training accuracy reflects the **four examples used for training**, not unseen generalization data. Switching the currently inspected input doesn't inherently change this aggregate accuracy; the **live prediction and P(1)** reflect the selected input pair.
+- Muting a neuron affects inference immediately. Starting training restores all muted nodes first, avoiding confusing mixed training/muting behavior.
 
-Since the project has no build system, you do not need to install Node, npm, Vite, React, or run a terminal command for publishing. Upload the files directly.
+## Play it
 
-### Local testing
+1. Open the deployed site on HTTPS and choose **Enable Camera**.
+2. Move your index fingertip so that the cursor over the *big neural diagram* lands on a **blue input node**; watch that node glow brighter.
+3. **Pinch thumb + index finger**, then release: the input changes between 0 and 1, updating the real prediction in the strip below the diagram.
+4. **Open your palm for ~1 second**: the model trains; monitor loss and accuracy.
+5. **Pinch a purple hidden neuron**: mute it and compare the new predicted probability and loss. Pinch again to restore.
+6. **Hold a closed fist for ~1.5 seconds**: reset. Repeat or try the other training datasets.
 
-Double-clicking `index.html` may show the basic layout, but camera permissions and JavaScript modules work more reliably through a local server. If Python is installed, open a terminal in this folder:
+Mouse/touch alternatives are supported: click input/hidden nodes in the graph, click `x1`/`x2` value buttons, and use Start Training / Reset.
 
-```bash
-python -m http.server 8080
-```
+## Updating an existing GitHub Pages site
 
-Then visit <http://localhost:8080>.
+1. Extract the release ZIP.
+2. In your *existing* GitHub repository, upload the new `index.html`, `styles.css`, `app.js`, and `README.md` over the old files, keeping everything in the repository root. If GitHub's upload UI rejects same-name files, delete the previous version of the specific file and upload its replacement.
+3. Commit the changes. You don't need to create a new repository or reconfigure Pages.
+4. Reload your current published site. The sidebar footer should display `V2.0`.
 
-## Privacy and usage
+If publishing for the first time, use GitHub → New repository → Public → Upload the extracted project files to the repository root → Settings → Pages → `Deploy from branch` → `main` + `/(root)`.
 
-- The app has **no backend**, accounts, advertising, paid APIs, or API keys.
-- Browser camera permission is **optional**; all lessons can be completed by mouse.
-- Video frames and hand landmarks are processed in the browser via MediaPipe; they are not sent to an application server.
-- Libraries, fonts and the pre-trained hand landmark model are downloaded from public CDN/model hosts when needed, which requires an internet connection. No app-controlled server receives camera frames.
-- Camera access normally requires `localhost` or an HTTPS URL, along with user permission.
-- `localStorage` only stores a 5-value lesson-completion list.
-- The decision map displays the network's predictions for the XOR/AND/OR truth-table problem. The reported accuracy is **training accuracy on four examples**, not generalization accuracy on unseen datasets.
-- The network animation is an explanatory visualization. It does not depict the exact numeric forward- or backward-pass computations in real time; the chart and predicted classes are computed using the actual network.
+## Implementation and caveats
 
-## Tech stack
+- HTML/CSS, JavaScript, Three.js (with 2D fallback), MediaPipe Tasks Vision, Canvas.
+- No app backend, no accounts, no paid API, no camera upload; MediaPipe downloads model/library assets over the internet.
+- Camera use requires a secure HTTPS origin or localhost and browser permission. Gesture recognition depends on the camera, lighting, distance and hand pose. There is an equivalent mouse/touch interaction for accessibility and troubleshooting.
+- Automated browser smoke tests covered clicking input values and hidden neurons, model convergence, language switch, reset and basic responsive layout. **Real hand tracking was not physically tested on a camera in this environment**; confirm on your device.
+- Dynamic neuron glow, line pulses and highlights explain the learning process visually but are not a step-for-step simulation of every exact backpropagation operation.
 
-Vanilla HTML, modern CSS, JavaScript, Three.js `0.187.0` (public CDN), Google MediaPipe Tasks Vision `0.10.22-rc.20250304` (public CDN + official model), Canvas 2D, GitHub Pages. The core teaching logic does not depend on either third-party library.
-
-## Project structure
+## Files
 
 ```text
 NeuroHands/
 ├── index.html
 ├── styles.css
 ├── app.js
+├── assets/favicon.svg
 ├── .nojekyll
-├── assets/
-│   └── favicon.svg
-└── README.md
+├── README.md
+└── ابدئي_من_هنا.md
 ```
-
-## Suggested portfolio description
-
-> NeuroHands is a browser-based interactive AI education lab combining camera gesture recognition, 3D neural network visualization, and a fully functional trainable multilayer perceptron. I built a guided five-step learning experience, live training analytics, a customizable network architecture, and a bilingual UI — with no paid API and no backend.
-
----
-
-**Note:** This is an educational demonstration, not a production ML training platform or an AI service. MediaPipe is used to detect hand landmarks; the neural network being taught is a separate model implemented in JavaScript.

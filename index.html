@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#080d1d" />
   <meta name="description" content="NeuroHands — an interactive neural network learning lab you can control with your hands. Explore, train and experiment with real neural networks." />
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=2" />
   <title>NeuroHands — Learn AI by Doing</title>
   <script type="importmap">
     {"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"}}
   </script>
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./app.js?v=2"></script>
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -35,7 +35,7 @@
           <p data-i18n="handsOnDesc">Train a real model, not just an animation.</p>
           <div class="guide-mini-line"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
-        <div class="sidebar-foot">NEUROHANDS <span>•</span> V1.0 <span>•</span> <span data-i18n="freeOpen">FREE & OPEN</span></div>
+        <div class="sidebar-foot">NEUROHANDS <span>•</span> V2.0 <span>•</span> <span data-i18n="freeOpen">FREE & OPEN</span></div>
       </div>
     </aside>
 
@@ -73,7 +73,27 @@
               <div class="scene-annotation annotation-mid">HIDDEN <span id="hidden-annotation">4 NEURONS</span></div>
               <div class="scene-annotation annotation-right">OUTPUT <span>1 NEURON</span></div>
               <div class="stage-bottom-bar"><span><span class="tiny-purple">●</span> <span data-i18n="clickNeuron">CLICK A NEURON TO INSPECT</span></span><span data-i18n="dragRotate">DRAG TO ROTATE ↗</span></div>
-              <div class="hand-cursor" id="hand-cursor" aria-hidden="true"><span></span></div>
+              <div class="gesture-coach" id="gesture-coach">
+                <div class="gesture-coach-label"><span class="tiny-green"></span> <span data-i18n="gestureMission">HAND INTERACTION MISSION</span></div>
+                <strong id="coach-title">Make the AI change its mind.</strong>
+                <p id="coach-hint">Point at an INPUT neuron and pinch to flip a 0 into a 1.</p>
+                <div class="coach-status"><span id="coach-move-status">✦ Ready to explore</span><span id="coach-step">01 / 03</span></div>
+              </div>
+              <div class="hand-cursor" id="hand-cursor" aria-hidden="true"><span></span><b id="hand-target">AIM AT A NEURON</b></div>
+              <div id="interaction-flash" class="interaction-flash" aria-hidden="true"></div>
+            </div>
+            <div class="live-playbar" aria-live="polite">
+              <div class="live-play-heading"><strong data-i18n="liveExperiment">LIVE PREDICTION</strong><small data-i18n="inputPlayHint">PINCH A BLUE NODE OR TAP A VALUE TO FLIP IT</small></div>
+              <div class="live-play-row">
+                <div class="play-input-group">
+                  <button type="button" class="bit-toggle" id="flip-input-0" aria-label="Flip input x1"><span>x₁</span><strong id="live-input-0">0</strong></button>
+                  <button type="button" class="bit-toggle" id="flip-input-1" aria-label="Flip input x2"><span>x₂</span><strong id="live-input-1">1</strong></button>
+                </div>
+                <span class="flow-arrow">→</span>
+                <div class="live-result"><span data-i18n="aiPrediction">AI PREDICTION</span><strong id="live-prediction">0</strong><small id="live-confidence">P(1) = 50%</small></div>
+                <div class="live-result expected"><span data-i18n="correctAnswer">RIGHT ANSWER</span><strong id="live-expected">1</strong><small id="live-result-feedback">Not trained yet</small></div>
+              </div>
+              <p class="play-explanation" id="play-explanation">This input pair is one of 4 XOR examples. Change an input to see a new prediction.</p>
             </div>
             <div class="canvas-footer">
               <div class="legend"><span><i class="legend-dot blue"></i> <span data-i18n="input">Input</span></span><span><i class="legend-dot lilac"></i> <span data-i18n="hidden">Hidden</span></span><span><i class="legend-dot mint"></i> <span data-i18n="output">Output</span></span></div>
@@ -121,7 +141,8 @@
         <div class="camera-float" id="camera-float" hidden>
           <div class="camera-float-head"><span><i class="tiny-green"></i> <span data-i18n="handTracking">HAND TRACKING</span></span><button id="close-camera" title="Turn off camera" aria-label="Turn off camera" type="button">×</button></div>
           <div class="camera-viewport"><video id="camera-video" muted autoplay playsinline></video><canvas id="hand-overlay"></canvas><span id="gesture-label">LOOKING FOR HAND...</span></div>
-          <div class="camera-hint" data-i18n="cameraHint">Pinch to select · Open palm to train</div>
+          <div class="camera-hint" data-i18n="cameraHint">Move index finger to aim · Pinch input to flip · Pinch hidden to mute · Open palm to train · Fist to reset</div>
+          <div class="gesture-action-feedback" id="gesture-action-feedback" aria-live="polite">Move your index finger over the big network.</div>
         </div>
         <footer class="footer"><span>✳ NEUROHANDS <span class="footer-divider">/</span> <span data-i18n="footerDesc">An experiment in learning differently.</span></span><span data-i18n="privateCamera">Your camera stays on your device. No uploads.</span></footer>
       </main>
